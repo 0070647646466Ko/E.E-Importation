@@ -1,0 +1,38 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    function isAdmin() {
+      // In a real app, you'd check a specific admin collection
+      // For now, we'll use the user's email if they are the owner
+      return isSignedIn() && request.auth.token.email == 'odjugoedward204@gmail.com';
+    }
+
+    function isValidProduct(data) {
+      return data.name is string && data.name.size() <= 200 &&
+             data.price is number && data.price > 0 &&
+             data.condition == "Brand New";
+    }
+
+    // Products: Everyone can read, only Admin can write
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if isAdmin() && isValidProduct(request.resource.data);
+    }
+
+    // Orders: Anyone can create, Admin can read/manage
+    match /orders/{orderId} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+  }
+}

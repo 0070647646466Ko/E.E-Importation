@@ -1,0 +1,52 @@
+{
+  "entities": {
+    "Product": {
+      "title": "Product",
+      "description": "A brand new electronic item (smartphone, gadget, appliance)",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "price": { "type": "number" },
+        "discountPrice": { "type": "number" },
+        "category": { "type": "string", "enum": ["Smartphones", "Laptops", "Accessories", "Home Appliances", "Gadgets"] },
+        "images": { "type": "array", "items": { "type": "string" } },
+        "stockStatus": { "type": "string", "enum": ["In Stock", "Few Left", "Out of Stock"] },
+        "specifications": { "type": "object" },
+        "isFeatured": { "type": "boolean" },
+        "isFlashSale": { "type": "boolean" },
+        "flashSaleEndsAt": { "type": "string", "format": "date-time" },
+        "condition": { "type": "string", "enum": ["Brand New"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "price", "category", "condition"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "Customer purchase request",
+      "type": "object",
+      "properties": {
+        "customerName": { "type": "string" },
+        "customerPhone": { "type": "string" },
+        "customerEmail": { "type": "string" },
+        "address": { "type": "string" },
+        "items": { "type": "array" },
+        "totalAmount": { "type": "number" },
+        "status": { "type": "string", "enum": ["Pending", "Confirmed", "Shipped", "Delivered", "Cancelled"] },
+        "paymentMethod": { "type": "string", "enum": ["Pay on Delivery", "Online Transfer"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    }
+  },
+  "firestore": {
+    "products": {
+      "schema": "Product",
+      "description": "Collection of all items for sale"
+    },
+    "orders": {
+      "schema": "Order",
+      "description": "Collection of customer orders"
+    }
+  }
+}
